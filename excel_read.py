@@ -3,6 +3,44 @@ import sys
 import os
 import xlwt
 import numpy as np
+import pandas as pd
+
+def bankname(file_path,col1,bank_path, col2 ):
+
+	file_excel = pd.read_excel(file_path, header=0, index_col=None,nrows=88)  # header=0表
+	#bank_excel = pd.read_excel(bank_path, header=0, index_col=None)  # header=0表
+	#bank_excel.to_pickle('samples')
+	bank_excel=pd.read_pickle('samples')
+	index = 0
+	for namef in file_excel.iloc[:, col1]:
+		#print(index)
+		sim=0
+		simstr=''
+		#print(namef)
+		for nameb in bank_excel.iloc[:, col2]:
+			res = []
+			for x in namef:
+				if x in nameb:
+					res.append(x)
+			lenstr=len(res)
+			if lenstr>sim:
+				sim=lenstr
+				simstr=nameb
+		file_excel.loc[index, '匹配后银行']=simstr
+		file_excel.loc[index, '相同字个数'] = sim
+		#print(simstr)
+		#print(sim)
+		index=index+1
+	return file_excel
+
+file_path=r'G:\教务处工作\远程实习工作坊\2020年\【总表】校外劳务申报录入表.xls'
+bank_path=r'G:\我的坚果云\学生助理工作\银行支行列表20210618(1)(1).xlsx'
+
+file=bankname(file_path,7,bank_path,1)
+file.to_excel(r'G:\教务处工作\远程实习工作坊\2020年\【总表】校外劳务申报录入表匹配银行后2.xls')
+m=-1
+
+
 
 def open_excel():
     try:

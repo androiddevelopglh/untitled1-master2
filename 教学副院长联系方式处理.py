@@ -15,9 +15,17 @@ import json
 import fun_readallfile
 
 ###--------合并excel表格--------####
+
+#def
+
+
 dir=r'G:\教务处工作\师范生学业荣誉制度\2021年上半年\收集的名单'
 typeall=['.xls','.xlsx']
 file_list=fun_readallfile.check_file(dir,typeall)
+
+
+
+
 
 m=1
 
@@ -62,10 +70,41 @@ def sendmessage(Message,allPhone,SendDate='',SendTime=''):
             if httpClient:
                 httpClient.close()
         i=i+1
+
+#-----------短信回复查询功能-------------------
+def Fetchmessage():
+    try:
+        params = urllib.parse.urlencode({'UserID': '837086',
+                                   'Account': 'jsjyk',
+                                   'Password': 'DC4584ABD7E06A1FC928DF01C37B7E48BEA257EE',
+                                   'ReturnXJ': '1'})
+
+        headers = {"Content-type": "application/x-www-form-urlencoded",
+                   "Accept": "text/plain"}
+
+        httpClient = http.client.HTTPConnection("dxjk.51lanz.com", 80, timeout=30)
+        httpClient.request("POST", "/LANZGateway/DirectFetchSMS.asp", params, headers)
+        response = httpClient.getresponse()
+        result=json.loads(response.read())
+        return result
+        NN=1
+    except Exception as e:
+        # print(e)
+        return e
+    finally:
+        if httpClient:
+            httpClient.close()
+
+
+
 Message='您好，这是测试信息'
 Phone=['18818399096','18392508007']
-#result=sendmessage(Message,Phone)
-result=sendmessage(Message,Phone,'2021-06-23','15:53:00')
+#result=sendmessage(Message,Phone)#即时发送
+#result=sendmessage(Message,Phone,'2021-06-23','15:53:00')#定时发送
+#result=Fetchmessage()#查询结果
+
+
+
 
 ##--------------常见分类信息--------------------
 varDict = locals()
@@ -99,4 +138,8 @@ for 类别 in 联系人类别:
     except:
         print(类别 + '出错')
 m=1
+
+
+
+
 
